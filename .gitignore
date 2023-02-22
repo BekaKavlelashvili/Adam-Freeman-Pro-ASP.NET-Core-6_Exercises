@@ -1,0 +1,12 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/LanguageFeatures/.vs/LanguageFeatures/config/applicationhost.config
+/LanguageFeatures/.vs/LanguageFeatures/DesignTimeBuild/.dtbcache.v2
+/LanguageFeatures/.vs/LanguageFeatures/FileContentIndex
+/LanguageFeatures/.vs/LanguageFeatures/v17
+/LanguageFeatures/.vs/ProjectEvaluation
+/LanguageFeatures/bin/Debug/net7.0
+/LanguageFeatures/obj/Debug/net7.0
+/LanguageFeatures/obj
