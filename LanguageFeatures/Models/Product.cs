@@ -6,6 +6,7 @@
 
         public decimal? Price { get; set; }
 
+        public bool NameBeginWithS => Name?[0] == 'S';
 
         public static Product?[] GetProducts()
         {
