@@ -16,6 +16,9 @@ var app = builder.Build();
 
 //app.MapGet("/", () => "Hello World!");
 app.UseStaticFiles();
+app.MapControllerRoute("pagination",
+    "Products/Page{ProductPage}",
+    new { Controller = "Home", action = "Index" });
 app.MapDefaultControllerRoute();
 
 SeedData.EnsurePopulated(app);
