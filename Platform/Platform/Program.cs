@@ -3,14 +3,33 @@ using Platform;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<MessageOptions>(opts =>
-{
-    opts.CityName = "Albany";
-});
+//builder.Services.Configure<MessageOptions>(opts =>
+//{
+//    opts.CityName = "Albany";
+//});
 
 var app = builder.Build();
 
-app.UseMiddleware<LocationMiddleware>();
+//app.UseMiddleware<Population>();
+//app.UseMiddleware<Capital>();
+
+//app.UseRouting();
+
+app.MapGet("routing", async context =>
+{
+    await context.Response.WriteAsync("request was routed");
+});
+
+app.MapGet("capital/uk", new Capital().Invoke);
+app.MapGet("population/paris", new Population().Invoke);
+
+
+//app.Run(async (context) =>
+//{
+//    await context.Response.WriteAsync("Terminal middleware reached");
+//});
+
+//app.UseMiddleware<LocationMiddleware>();
 
 //app.MapGet("/location", async (HttpContext context, IOptions<MessageOptions> msgOpts) =>
 //{
@@ -59,6 +78,6 @@ app.UseMiddleware<LocationMiddleware>();
 ////class-based custom middleware
 //app.UseMiddleware<Platform.QueryStringMiddleware>();
 
-app.MapGet("/", () => "Hello World!");
+//app.MapGet("/", () => "Hello World!");
 
 app.Run();
