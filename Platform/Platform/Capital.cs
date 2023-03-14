@@ -1,4 +1,6 @@
-﻿namespace Platform
+﻿using System.Runtime.InteropServices;
+
+namespace Platform
 {
     public class Capital
     {
@@ -17,6 +19,12 @@
                     break;
                 case "monaco":
                     context.Response.Redirect($"/population/{country}");
+                    LinkGenerator? generator = context.RequestServices.GetService<LinkGenerator>();
+                    string? url = generator?.GetPathByRouteValues(context, "population", new { city = country });
+                    if (url != null)
+                    {
+                        context.Response.Redirect(url);
+                    }
                     return;
             }
 
