@@ -23,7 +23,7 @@ var app = builder.Build();
 
 
 //segment variables in url patterns
-app.MapGet("files/{filename}.{ext}", async context =>
+app.MapGet("{first}/{second}/{*catchall}", async context =>
 {
     await context.Response.WriteAsync("Request was Routed \n");
     foreach (var kvp in context.Request.RouteValues)
