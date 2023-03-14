@@ -4,6 +4,10 @@ using System.Runtime.ExceptionServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.Configure<RouteOptions>(opts =>
+{
+    opts.ConstraintMap.Add("countryName", typeof(CountryRouteConstrait));
+});
 //builder.Services.Configure<MessageOptions>(opts =>
 //{
 //    opts.CityName = "Albany";
