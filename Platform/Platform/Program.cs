@@ -32,7 +32,7 @@ app.MapGet("{first:alpha:length(3)}/{second:bool}", async context =>
     }
 });
 
-app.MapGet("capital/{country}", Capital.Endpoint);
+app.MapGet("capital/{country:regex(^uk|france|monaco$)}", Capital.Endpoint);
 app.MapGet("size/{city?}", Population.Endpoint).WithMetadata(new RouteNameMetadata("population"));
 
 
