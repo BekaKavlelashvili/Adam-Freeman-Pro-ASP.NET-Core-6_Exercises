@@ -7,7 +7,7 @@
         public bool Match(HttpContext? httpContext, IRouter route, string routKey, RouteValueDictionary values, RouteDirection routeDirection)
         {
             string segmentValue = values[routKey] as string ?? "";
-            return Array.IndexOf(coutrnies, segmentValue.ToLower()) > -1;
+            return Array.IndexOf(coutrnies, segmentValue.ToLower()) > -1; ;
         }
     }
 }
