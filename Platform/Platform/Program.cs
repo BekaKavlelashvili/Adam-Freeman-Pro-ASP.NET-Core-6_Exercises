@@ -1,5 +1,6 @@
 //using Microsoft.Extensions.Options;
 using Platform;
+using System.Runtime.ExceptionServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,9 +16,18 @@ var app = builder.Build();
 
 //app.UseRouting();
 
-app.MapGet("routing", async context =>
+//app.MapGet("routing", async context =>
+//{
+//    await context.Response.WriteAsync("request was routed");
+//});
+
+app.MapGet("{first}/{second}/{third}", async context =>
 {
-    await context.Response.WriteAsync("request was routed");
+    await context.Response.WriteAsync("Request was Routed \n");
+	foreach (var kvp in context.Request.RouteValues)
+	{
+		await context.Response.WriteAsync($"{kvp.Key}: {kvp.Value}\n");
+	}
 });
 
 app.MapGet("capital/uk", new Capital().Invoke);
