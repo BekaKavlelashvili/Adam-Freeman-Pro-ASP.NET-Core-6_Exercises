@@ -1,10 +1,12 @@
-﻿namespace Dependency_Injection
+﻿using Dependency_Injection.Services;
+
+namespace Dependency_Injection
 {
     public class WeatherEndpoint
     {
-        public static async Task Endpoint(HttpContext context)
+        public static async Task Endpoint(HttpContext context, IResponseFormatter formatter)
         {
-            await context.Response.WriteAsync("Enpoint Class: It is cloudy in Milan");
+            await formatter.Format(context, "Enpoint Class: It is cloudy in Milan");
         }
     }
 }
