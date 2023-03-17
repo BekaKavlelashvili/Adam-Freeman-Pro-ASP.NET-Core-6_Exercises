@@ -2,7 +2,7 @@ using Dependency_Injection;
 using Dependency_Injection.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
+builder.Services.AddTransient<IResponseFormatter, GuidService>();
 
 var app = builder.Build();
 
@@ -14,7 +14,8 @@ app.MapGet("middleware/function", async (HttpContext context, IResponseFormatter
     await formatter.Format(context, "Middleware Function: It is snowing in Chicago");
 });
 
-app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
+//app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
+app.MapEndpoint<WeatherEndpoint>("endpoint/class");
 
 app.MapGet("endpoint/function", async (HttpContext context, IResponseFormatter formatter) =>
 {
