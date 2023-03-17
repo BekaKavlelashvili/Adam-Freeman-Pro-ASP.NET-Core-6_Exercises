@@ -19,7 +19,7 @@ namespace Dependency_Injection.Services
 
             app.MapGet(path, context => (Task)(methodInfo.Invoke(endpointInstance, parameters.Select(p => p.ParameterType == typeof(HttpContext)
                                             ? context
-                                            : app.ServiceProvider.GetService(p.ParameterType)).ToArray()))!);
+                                            : context.RequestServices.GetService(p.ParameterType)).ToArray()))!);
         }
     }
 }
