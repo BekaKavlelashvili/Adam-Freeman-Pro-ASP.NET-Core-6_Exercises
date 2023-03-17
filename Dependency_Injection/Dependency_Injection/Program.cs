@@ -2,7 +2,9 @@ using Dependency_Injection;
 using Dependency_Injection.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddScoped<IResponseFormatter, GuidService>();
+
+builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
+builder.Services.AddScoped<ITimeStamping, DefaultTimeStamper>();
 
 var app = builder.Build();
 
