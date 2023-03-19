@@ -4,31 +4,30 @@ using System.Runtime.ExceptionServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.Configure<RouteOptions>(opts =>
-{
-    opts.ConstraintMap.Add("countryName", typeof(CountryRouteConstrait));
-});
+//builder.Services.Configure<RouteOptions>(opts =>
+//{
+//    opts.ConstraintMap.Add("countryName", typeof(CountryRouteConstrait));
+//});
 
 //builder.Services.Configure<MessageOptions>(opts =>
 //{
 //    opts.CityName = "Albany";
 //});
 
-var app = builder.Build();
 
-app.Use(async (context, next) =>
-{
-    Endpoint? end = context.GetEndpoint();
-    if (end != null)
-    {
-        await context.Response.WriteAsync($"{end.DisplayName} Selected \n");
-    }
-    else
-    {
-        await context.Response.WriteAsync("No endpoint Selected \n");
-    }
-    await next();
-});
+//app.Use(async (context, next) =>
+//{
+//    Endpoint? end = context.GetEndpoint();
+//    if (end != null)
+//    {
+//        await context.Response.WriteAsync($"{end.DisplayName} Selected \n");
+//    }
+//    else
+//    {
+//        await context.Response.WriteAsync("No endpoint Selected \n");
+//    }
+//    await next();
+//});
 
 //app.UseMiddleware<Population>();
 //app.UseMiddleware<Capital>();
@@ -56,20 +55,20 @@ app.Use(async (context, next) =>
 //app.MapGet("capital/{country:regex(^uk|france|monaco$)}", Capital.Endpoint);
 //app.MapGet("size/{city?}", Population.Endpoint).WithMetadata(new RouteNameMetadata("population"));
 
-app.Map("{number:int}", async context =>
-{
-    await context.Response.WriteAsync("Routed to the int endpoint");
-}).WithDisplayName("Int Endpoint").Add(b => ((RouteEndpointBuilder)b).Order = 1);
+//app.Map("{number:int}", async context =>
+//{
+//    await context.Response.WriteAsync("Routed to the int endpoint");
+//}).WithDisplayName("Int Endpoint").Add(b => ((RouteEndpointBuilder)b).Order = 1);
 
-app.Map("{number:double}", async context =>
-{
-    await context.Response.WriteAsync("Routed to the double endpoint");
-}).WithDisplayName("Double Endpoint").Add(b => ((RouteEndpointBuilder)b).Order = 2);
+//app.Map("{number:double}", async context =>
+//{
+//    await context.Response.WriteAsync("Routed to the double endpoint");
+//}).WithDisplayName("Double Endpoint").Add(b => ((RouteEndpointBuilder)b).Order = 2);
 
-app.MapFallback(async context =>
-{
-    await context.Response.WriteAsync("Routed to fallback endpoint");
-});
+//app.MapFallback(async context =>
+//{
+//    await context.Response.WriteAsync("Routed to fallback endpoint");
+//});
 
 //app.Run(async (context) =>
 //{
@@ -125,6 +124,32 @@ app.MapFallback(async context =>
 ////class-based custom middleware
 //app.UseMiddleware<Platform.QueryStringMiddleware>();
 
-//app.MapGet("/", () => "Hello World!");
+var servicesConfig = builder.Configuration;
+builder.Services.Configure<MessageOptions>(servicesConfig.GetSection("Location"));
+
+var serviceEnv = builder.Environment;
+
+var app = builder.Build();
+
+var pipeline = app.Configuration;
+var pipelineEnv = app.Environment;
+
+app.UseMiddleware<LocationMiddleware>();
+
+app.MapGet("config", async (HttpContext context, IConfiguration config, IWebHostEnvironment env) =>
+{
+    string defaultDebug = config["Logging:LogLevel:Default"];
+    await context.Response.WriteAsync($"The config setting is: {defaultDebug}");
+    await context.Response.WriteAsync($"\n The env setting is: {env.EnvironmentName}");
+    string wsID = config["WebService:Id"];
+    string wsKey = config["WebService:Key"];
+    await context.Response.WriteAsync($"\n The secret Id is:{wsID}");
+    await context.Response.WriteAsync($"\n The secret Key is:{wsKey}");
+});
+
+app.MapGet("/", async context =>
+{
+    await context.Response.WriteAsync("Hello World!");
+});
 
 app.Run();
