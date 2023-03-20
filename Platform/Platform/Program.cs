@@ -1,4 +1,5 @@
 //using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.HttpLogging;
 using Platform;
 using System.Runtime.ExceptionServices;
 
@@ -124,32 +125,48 @@ var builder = WebApplication.CreateBuilder(args);
 ////class-based custom middleware
 //app.UseMiddleware<Platform.QueryStringMiddleware>();
 
-var servicesConfig = builder.Configuration;
-builder.Services.Configure<MessageOptions>(servicesConfig.GetSection("Location"));
+//var servicesConfig = builder.Configuration;
+//builder.Services.Configure<MessageOptions>(servicesConfig.GetSection("Location"));
 
-var serviceEnv = builder.Environment;
+//var serviceEnv = builder.Environment;
 
 var app = builder.Build();
 
-var pipeline = app.Configuration;
-var pipelineEnv = app.Environment;
+//var pipeline = app.Configuration;
+//var pipelineEnv = app.Environment;
 
-app.UseMiddleware<LocationMiddleware>();
+//app.UseMiddleware<LocationMiddleware>();
 
-app.MapGet("config", async (HttpContext context, IConfiguration config, IWebHostEnvironment env) =>
+//app.MapGet("config", async (HttpContext context, IConfiguration config, IWebHostEnvironment env) =>
+//{
+//    string defaultDebug = config["Logging:LogLevel:Default"];
+//    await context.Response.WriteAsync($"The config setting is: {defaultDebug}");
+//    await context.Response.WriteAsync($"\n The env setting is: {env.EnvironmentName}");
+//    string wsID = config["WebService:Id"];
+//    string wsKey = config["WebService:Key"];
+//    await context.Response.WriteAsync($"\n The secret Id is:{wsID}");
+//    await context.Response.WriteAsync($"\n The secret Key is:{wsKey}");
+//});
+
+//app.MapGet("/", async context =>
+//{
+//    await context.Response.WriteAsync("Hello World!");
+//});
+
+builder.Services.AddHttpLogging(opts =>
 {
-    string defaultDebug = config["Logging:LogLevel:Default"];
-    await context.Response.WriteAsync($"The config setting is: {defaultDebug}");
-    await context.Response.WriteAsync($"\n The env setting is: {env.EnvironmentName}");
-    string wsID = config["WebService:Id"];
-    string wsKey = config["WebService:Key"];
-    await context.Response.WriteAsync($"\n The secret Id is:{wsID}");
-    await context.Response.WriteAsync($"\n The secret Key is:{wsKey}");
+    opts.LoggingFields = HttpLoggingFields.RequestMethod 
+    | HttpLoggingFields.RequestPath | HttpLoggingFields.ResponseStatusCode;
 });
 
-app.MapGet("/", async context =>
-{
-    await context.Response.WriteAsync("Hello World!");
-});
+app.UseHttpLogging();
+
+//var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Pipeline");
+
+//logger.LogDebug("Pipeline configuration starting");
+
+app.MapGet("population/{city?}", Population.Endpoint);
+
+//logger.LogDebug("Pipeline configuration complete");
 
 app.Run();
