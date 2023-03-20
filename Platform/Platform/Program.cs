@@ -1,5 +1,6 @@
 //using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.Extensions.FileProviders;
 using Platform;
 using System.Runtime.ExceptionServices;
 
@@ -164,6 +165,15 @@ app.UseHttpLogging();
 //var logger = app.Services.GetRequiredService<ILoggerFactory>().CreateLogger("Pipeline");
 
 //logger.LogDebug("Pipeline configuration starting");
+
+app.UseStaticFiles();
+
+var env = app.Environment;
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider($"{env.ContentRootPath}/staticFiles"),
+    RequestPath="/files"
+});
 
 app.MapGet("population/{city?}", Population.Endpoint);
 
